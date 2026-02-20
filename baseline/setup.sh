@@ -1,94 +1,92 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -e
 set -x
 
-export DEBIAN_FRONTEND=noninteractive
-
-########################################
-# system utils
-########################################
-apt-get update
-apt-get upgrade -y
-
-apt-get install -y \
+# System utils
+apk update && apk upgrade
+apk add --no-cache \
   autoconf \
+  bash \
   ca-certificates \
   curl \
   gcc \
   git \
   gnupg \
   make \
-  libc-dev \
-  lsb-release \
-  pkg-config \
-  sudo
+  musl-dev \
+  shadow \
+  pkgconf \
+  sudo \
+  procps
 
-########################################
-# php
-########################################
-apt-get install -y php
-apt-get install -y \
-  php-apcu \
-  php-bcmath \
-  php-ctype \
-  php-dev \
-  php-curl \
-  php-fileinfo \
-  php-fpm \
-  php-gd \
-  php-iconv \
-  php-json \
-  php-ldap \
-  php-mbstring \
-  php-mysql \
-  php-opcache \
-  php-pear \
-  php-posix \
-  php-sockets \
-  php-xml \
-  php-xmlwriter \
-  php-zip
+# PHP
+# Alpine 3.21 -> PHP 8.3
+apk add --no-cache \
+  php83 \
+  php83-fpm \
+  php83-opcache \
+  php83-ctype \
+  php83-dev \
+  php83-curl \
+  php83-fileinfo \
+  php83-gd \
+  php83-iconv \
+  php83-mbstring \
+  php83-mysqli \
+  php83-pdo_mysql \
+  php83-pear \
+  php83-posix \
+  php83-sockets \
+  php83-xml \
+  php83-xmlwriter \
+  php83-zip \
+  php83-ldap \
+  php83-pecl-apcu \
+  php83-bcmath \
+  php83-tokenizer \
+  php83-simplexml \
+  php83-dom
 
-# Verify installation and modules
+# Symlink php83 to php if not done automatically
+if [ ! -f /usr/bin/php ]; then
+  ln -sf /usr/bin/php83 /usr/bin/php
+fi
+
+# Verify
 php -v
 php -m
 
-sed -i "s/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g" /etc/php/8.3/fpm/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 32M/g" /etc/php/8.3/fpm/php.ini
+# Config adjustments
+# In Alpine, main ini is /etc/php83/php.ini
+sed -i "s/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g" /etc/php83/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 32M/g" /etc/php83/php.ini
 
-########################################
-# node
-########################################
-apt-get install -y nodejs npm
+# Node
+apk add --no-cache nodejs npm
 npm install -g ws
 
-########################################
-# Additional dependencies
-########################################
-apt-get install -y \
-  cron \
+# Additional
+apk add --no-cache \
+  dcron \
   imagemagick \
-  ldap-utils \
+  openldap-clients \
   mariadb-client \
   nginx \
-  python3-pygments \
+  py3-pygments \
   supervisor
 
-########################################
-# Create users
-########################################
-echo "nginx:x:497:495:user for nginx:/var/lib/nginx:/bin/false" >> /etc/passwd
-echo "nginx:!:495:" >> /etc/group
-echo "PHORGE:x:2000:2000:user for phorge:/srv/phorge:/bin/bash" >> /etc/passwd
-echo "wwwgrp-phorge:!:2000:nginx" >> /etc/group
+# Users
+# Group 2000
+addgroup -g 2000 wwwgrp-phorge
+# User PHORGE (uid 2000, primary gid 2000)
+adduser -u 2000 -G wwwgrp-phorge -h /srv/phorge -s /bin/bash -D PHORGE
+# Nginx user (created by apk, add to group)
+addgroup nginx wwwgrp-phorge
 
-########################################
-# Download phorge
-########################################
-mkdir /srv/phorge
+# Phorge setup
+mkdir -p /srv/phorge
 cd /srv/phorge
-
 git clone https://we.phorge.it/source/arcanist.git /srv/phorge/arcanist
 git clone https://we.phorge.it/source/phorge.git /srv/phorge/phorge
 

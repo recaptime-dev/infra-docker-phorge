@@ -21,7 +21,7 @@ if [ ! -f /baked ]; then
     chmod 600 /etc/ssh/ssh_host_{dsa_,ecdsa_,ed25519_,,rsa_}key
   fi
     #generate missing keys --> sshd needs sometimes more keys for newer protocolls
-    /usr/sbin/sshd-gen-keys-start
+    ssh-keygen -A
     mkdir -pv $PHORGE_HOST_KEYS_PATH
     #copy only when the file does not exist
     cp -vn /etc/ssh/ssh_host_{dsa_,ecdsa_,ed25519_,,rsa_}key{,.pub} $PHORGE_HOST_KEYS_PATH/

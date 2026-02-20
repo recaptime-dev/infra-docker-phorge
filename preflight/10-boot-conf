@@ -112,7 +112,7 @@ sed "s/__PHORGE_VCS_USER__/$PHORGE_VCS_USER/g" /etc/phorge-ssh/sshd_config.phorg
 sed "s/__PHORGE_VCS_USER__/$PHORGE_VCS_USER/g" /etc/phorge-ssh/phorge-ssh-hook.sh.template > /etc/phorge-ssh/phorge-ssh-hook.sh
 
 # TODO: probably don't hardcode the major/minor version...
-sed "s/__PHORGE_VCS_USER__/$PHORGE_VCS_USER/g" /etc/php/8.3/fpm/php-fpm.conf.template > /etc/php/8.3/fpm/php-fpm.conf
+sed "s/__PHORGE_VCS_USER__/$PHORGE_VCS_USER/g" /etc/php83/php-fpm.conf.template > /etc/php83/php-fpm.conf
 chmod 755 /etc/phorge-ssh/phorge-ssh-hook.sh
 
 # Set up Phorge
@@ -225,7 +225,7 @@ unset APHLICT_PORT
 popd
 
 if [ "$ENABLE_APCU" == "true" ]; then
-  cat >/etc/php/8.3/conf.d/apcu.ini <<EOF
+  cat >/etc/php83/conf.d/apcu.ini <<EOF
 extension=apcu.so
 EOF
 fi

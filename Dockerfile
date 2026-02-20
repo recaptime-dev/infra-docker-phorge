@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM alpine:3.21
 
 EXPOSE 80 443 22 2222
 COPY baseline /baseline
