@@ -1,3 +1,31 @@
+# `@recaptime-dev/infra-docker-phorge` - Docker image for Phorge in Alpine Linux
+
+## Usage
+
+* As a standalone Docker image:
+
+  ```shell
+  # Check docs/basic-setup.md and docs/advanced-setup.md for instructions
+  # on how to set up your Phorge instance.
+  docker run \
+    --rm -p 80:80 -p 443:443 -p 22:22 \
+    --env PHORGE_HOST=mydomain.com \
+    --env MYSQL_HOST=10.0.0.1 \
+    --env MYSQL_USER=user \
+    --env MYSQL_PASS=pass \
+    --env PHORGE_REPOSITORY_PATH=/repos \
+    -v /host/repo/path:/repos \
+    ghcr.io/recaptime-dev/phorge-alpine
+  ```
+
+* Via Docker Compose:
+
+  ```shell
+
+  ```
+
+---
+
 # Phorge
 
 This is a Docker image which provides a fully configured Phorge image, including SSH connectivity to repositories, real-time notifications via Web Sockets and all of the other parts that are normally difficult to configure done for you.
@@ -18,11 +46,11 @@ docker run \
     phorge
 ```
 
-Alternatively you can launch this image with Docker Compose. Refer to [Using Docker Compose](./DOCKER-COMPOSE.md) for more information.
+Alternatively you can launch this image with Docker Compose. Refer to [Using Docker Compose](./docs/docker-compose.md) for more information.
 
 ## Configuration
 
-For basic configuration in getting the image running, refer to [Basic Configuration](./BASIC-CONFIG.md).
+For basic configuration in getting the image running, refer to [Basic Configuration](./docs/basic-setup.md).
 
 For more advanced configuration topics including:
 
@@ -30,7 +58,7 @@ For more advanced configuration topics including:
 * Running custom commands during the boot process, and
 * Baking configuration into your own derived Docker image
 
-refer to [Advanced Configuration](./ADVANCED-CONFIG.md).
+refer to [Advanced Configuration](./docs/advanced-setup.md).
 
 For users that are upgrading to this version and currently using the old `/config` mechanism to configure Phorge, this configuration mechanism will continue to work, but it's recommended that you migrate to environment variables or baked images when you next get the chance.
 
