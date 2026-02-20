@@ -21,8 +21,12 @@
 * Via Docker Compose:
 
   ```shell
-
+  docker compose up
   ```
+
+## License
+
+MIT
 
 ---
 
