@@ -1,4 +1,4 @@
-name: Nightly Docker builds
+name: Docker CI
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -9,15 +9,13 @@ on:
   workflow_dispatch:
 
 env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository_owner }}/infra/docker/phorge
 
 
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -34,7 +32,7 @@ jobs:
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@/faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -44,11 +42,11 @@ jobs:
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
-      - name: Log into registry ${{ env.REGISTRY }}
+      - name: Log into registry GHCR
         if: github.event_name != 'pull_request'
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v.3.7.0
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,7 +56,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@a60f0f62b5c12316066c8db464bfb2faafd7907b
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: |
+            ghcr.io/${{ env.IMAGE_NAME }}
           labels: |
             org.opencontainers.image.title=Phorge (Alpine Linux) Docker image
             org.opencontainers.image.description=Alpine Linux Docker image port of Christopher Wetherill's Docker build setup for Phorge.
