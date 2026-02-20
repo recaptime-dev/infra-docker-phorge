@@ -18,7 +18,8 @@ apk add --no-cache \
   shadow \
   pkgconf \
   sudo \
-  procps
+  procps \
+  openssh
 
 # PHP
 # Alpine 3.21 -> PHP 8.3
@@ -36,6 +37,7 @@ apk add --no-cache \
   php83-mysqli \
   php83-pdo_mysql \
   php83-pear \
+  php83-pcntl \
   php83-posix \
   php83-sockets \
   php83-xml \
