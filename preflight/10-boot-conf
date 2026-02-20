@@ -238,6 +238,22 @@ $_SERVER['HTTPS'] = true;
 EOF
 fi
 
+# New Feature Flag: Force Host Header [note: AI-generated snippet from Gemini]
+# This prevents "Site Not Found" errors when behind complex proxies.
+if [ "$PHORGE_FORCE_HOST" == "true" ]; then
+  # Determine which host to force; default to the configured PHORGE_HOST
+  TARGET_HOST="${PHORGE_OVERRIDE_HOST:-$PHORGE_HOST}"
+  
+  echo "Feature Flag: PHORGE_FORCE_HOST is enabled. Forcing Host to $TARGET_HOST."
+  
+  # Append host-forcing logic to the preamble.php
+  # We use '>>' instead of '>' in case the SSL_TYPE logic already created the file
+  sudo -u "$PHORGE_VCS_USER" bash -c "cat << EOF >> /srv/phorge/phorge/support/preamble.php
+<?php
+\$_SERVER['HTTP_HOST'] = '$TARGET_HOST';
+EOF"
+fi
+
 if [ "$SCRIPT_BEFORE_MIGRATION" != "" ]; then
   pushd /srv/phorge/phorge
   $SCRIPT_BEFORE_MIGRATION
