@@ -23,6 +23,8 @@ mv php-fpm.conf /etc/php83/php-fpm.conf.template
 mv supervisord.conf /app/supervisord.conf
 mv init.sh /app/init.sh
 
+mv preamble.php /srv/phorge/phorge/support/preamble.php
+
 mkdir -pv /run/watch
 mkdir /etc/phorge-ssh
 mv sshd_config.phorge /etc/phorge-ssh/sshd_config.phorge.template

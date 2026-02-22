@@ -115,6 +115,10 @@ sed "s/__PHORGE_VCS_USER__/$PHORGE_VCS_USER/g" /etc/phorge-ssh/phorge-ssh-hook.s
 sed "s/__PHORGE_VCS_USER__/$PHORGE_VCS_USER/g" /etc/php83/php-fpm.conf.template > /etc/php83/php-fpm.conf
 chmod 755 /etc/phorge-ssh/phorge-ssh-hook.sh
 
+# Ensure the local config directory exists and is owned by the VCS user
+mkdir -p /srv/phorge/phorge/conf/local
+chown -R "$PHORGE_VCS_USER" /srv/phorge/phorge/conf/local
+
 # Set up Phorge
 if [ "$SCRIPT_BEFORE_UPDATE" != "" ]; then
   pushd /srv/phorge/phorge
@@ -230,17 +234,26 @@ extension=apcu.so
 EOF
 fi
 
-if [ "$PHORGE_FORCE_HOST" == "true" ] || [ "$SSL_TYPE" == "external" ]; then
-  # Just dump the PHP logic; let PHP do the heavy lifting at runtime
-  cat << 'EOF' > /srv/phorge/phorge/support/preamble.php
-<?php
-if (getenv("SSL_TYPE") === "external") { $_SERVER["HTTPS"] = "on"; }
-if (getenv("PHORGE_FORCE_HOST") === "true") { 
-    $_SERVER["HTTP_HOST"] = getenv("PHORGE_HOST") ?: "phorge.localhost"; 
-}
-EOF
-  chown "$PHORGE_VCS_USER" /srv/phorge/phorge/support/preamble.php
-fi
+chown "${PHORGE_VCS_USER:-"git"}" /srv/phorge/phorge/support/preamble.php
+
+# HACK: A bit of workaround for those proxies that don't pass Host aroundm think Firebase Studio
+# Source: https://github.com/cooperspencer/phorge/blob/5890c6ff66c36872d890fe07f552d50208e36701/scripts/startup.sh#L78
+sed -i "s/        server_name  phorge.local;/        server_name  $PHORGE_HOST;/g" /app/nginx.conf
+sed -i "s/            proxy_set_header Host phorge.local;/            proxy_set_header Host $PHORGE_HOST;/g" /app/nginx.conf
+# Inject Map blocks into nginx.conf to handle forwarded headers
+sed -i '/http {/a \
+    map $http_x_forwarded_host $mapped_host { \
+        default $http_host; \
+        "~.+" $http_x_forwarded_host; \
+    } \
+    map $http_x_forwarded_proto $mapped_https { \
+        default $https; \
+        "https" "on"; \
+    }' /app/nginx.conf
+# Update fastcgi.conf to use our mapped host and protocol
+sed -i 's/fastcgi_param  HTTPS.*/fastcgi_param  HTTPS              $mapped_https;/g' /app/fastcgi.conf
+# Ensure HTTP_HOST is passed correctly to satisfy Phorge's base-uri check
+echo "    fastcgi_param  HTTP_HOST          \$mapped_host;" >> /app/fastcgi.conf
 
 if [ "$SCRIPT_BEFORE_MIGRATION" != "" ]; then
   pushd /srv/phorge/phorge
@@ -251,10 +264,12 @@ fi
 # The search database may need to be repaired, and if so, will prevent bin/storage upgrade from working
 # so preemptively run a repair on that database now.
 set +x
-mysqlcheck --host="$MYSQL_HOST" --port="$MYSQL_PORT" --user="$MYSQL_USER" --password="$MYSQL_PASS" --databases "${MYSQL_STORAGE_NAMESPACE}_search" || true
+mariadb-check --host="$MYSQL_HOST" --port="$MYSQL_PORT" --user="$MYSQL_USER" --password="$MYSQL_PASS" --databases "${MYSQL_STORAGE_NAMESPACE}_search" || true
 set -x
 
 /srv/phorge/phorge/bin/storage upgrade --force
+# needed to fix permission errors on first run
+chown -R "${PHORGE_VCS_USER}:wwwgrp-phorge" "${PHORGE_REPOSITORY_PATH}"
 
 if [ "$SCRIPT_AFTER_MIGRATION" != "" ]; then
   pushd /srv/phorge/phorge

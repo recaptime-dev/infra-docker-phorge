@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE: Replace this with the username that you expect users to connect with.
-VCSUSER="__PHORGE_VCS_USER__"
+VCSUSER="${PHORGE_VCS_USER:-"git"}"
 
 # NOTE: Replace this with the path to your Phorge directory.
 ROOT="/srv/phorge/phorge"
