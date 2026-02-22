@@ -68,7 +68,7 @@ RUN addgroup -g 2000 wwwgrp-phorge \
 WORKDIR /srv/phorge
 RUN git clone https://we.phorge.it/source/arcanist.git ./arcanist \
   && git clone https://we.phorge.it/source/phorge.git ./phorge \
-  && /srv/phorge/phorge/support/aphlict/server/node_modules \
+  && mkdir /srv/phorge/phorge/support/aphlict/server/node_modules \
   && npm install -prefix /srv/phorge/phorge/support/aphlict/server/node_modules ws \
   && git config --system --add safe.directory /srv/phorge/arcanist \
   && git config --system --add safe.directory /srv/phorge/phorge \
