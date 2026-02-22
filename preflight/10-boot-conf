@@ -270,6 +270,7 @@ set -x
 /srv/phorge/phorge/bin/storage upgrade --force
 # needed to fix permission errors on first run
 chown -R "${PHORGE_VCS_USER}:wwwgrp-phorge" "${PHORGE_REPOSITORY_PATH}"
+chown -R "${PHORGE_VCS_USER}:wwwgrp-phorge" "${PHORGE_STORAGE_PATH}"
 
 if [ "$SCRIPT_AFTER_MIGRATION" != "" ]; then
   pushd /srv/phorge/phorge
