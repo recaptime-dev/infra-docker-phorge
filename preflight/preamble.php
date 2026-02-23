@@ -7,6 +7,10 @@
  * recommended).
  */
 
+$fowardedFor_Trust = intval(getenv("PHORGE_TRUST_X_FORWARDED_FOR_HEADER")) ?: 3;
+
+preamble_trust_x_forwarded_for_header($fowardedFor_Trust);
+
 // Trust the X-Forwarded-Host provided by Cloud Workstations and friends
 if ($workstationHost = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? null) {
     $_SERVER['HTTP_HOST'] = $workstationHost;
@@ -18,7 +22,6 @@ if ($workstationHost = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? null) {
     }
 
     if (getenv("PHORGE_FORCE_HOST") === "true") { 
-        preamble_trust_x_forwarded_for_header(3);
         $_SERVER["HTTP_HOST"] = getenv("PHORGE_HOST") ?: "phorge.localhost"; 
     }
 }
