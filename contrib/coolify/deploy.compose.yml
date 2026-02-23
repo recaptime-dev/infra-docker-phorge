@@ -1,0 +1,50 @@
+# This is a Compose file tweaked for use in Coolify-based deployments.
+# Currently experimental as this is extensively tested over at @ajhalili2006's
+# homelab.
+services:
+  phorge:
+    image: 'ghcr.io/recaptime-dev/infra/docker/phorge:recaptime-dev-main'
+    ports:
+      - '2222:22' # tweak this to your needs
+    environment:
+      - SERVICE_URL_PHORGE_80
+      - SSL_TYPE=external
+      - PHORGE_REPOSITORY_PATH=/repos
+      - PHORGE_VCS_PORT=2222
+      - PHORGE_HOST_KEYS_PATH=/host-keys
+      - 'PHORGE_STORAGE_PATH=${PHORGE_STORAGE_PATH}'
+      - 'PHORGE_STORAGE_TYPE=${PHORGE_STORAGE_TYPE}'
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASS=a6efc924c5fe821824c36db7
+      - 'PHORGE_HOST=${SERVICE_FQDN_PHORGE}'
+      - 'AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}'
+      - 'AWS_S3_REGION=${AWS_S3_REGION}'
+      - 'AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}'
+      - 'AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}'
+      - 'PHORGE_STORAGE_BUCKET=${PHORGE_STORAGE_BUCKET}'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - 'phorge-repos:/repos'
+      - 'phorge-hostkeys:/host-keys'
+      - 'phorge-files:/files'
+    depends_on:
+      - mariadb
+  mariadb:
+    restart: unless-stopped
+    volumes:
+      - 'phorge-db:/var/lib/mysql'
+    image: 'mariadb:12'
+    hostname: mysql
+    environment:
+      MARIADB_USER: phorge
+      MARIADB_PASSWORD: phorge
+      MARIADB_DATABASE: phroge
+      MARIADB_ROOT_PASSWORD: a6efc924c5fe821824c36db7
+volumes:
+  phorge-db: null
+  phorge-repos: null
+  phorge-hostkeys: null
+  phorge-files: null
+
