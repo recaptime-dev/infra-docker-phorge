@@ -58,8 +58,13 @@ RUN apk update && apk upgrade \
     npm \
   && ln -sf /usr/bin/php83 /usr/bin/php
 
+# Tailscale
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /usr/local/bin/tailscaled
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscale /usr/local/bin/tailscale
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
 RUN sed -i "s/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g" /etc/php83/php.ini \
-  && sed -i "s/post_max_size = 8M/post_max_size = 32M/g" /etc/php83/php.ini
+  && sed -i "s/post_max_size = 8M/post_max_size = 64M/g" /etc/php83/php.ini
 
 RUN addgroup -g 2000 wwwgrp-phorge \
   # User PHORGE (uid 2000, primary gid 2000)
@@ -81,4 +86,8 @@ COPY preflight /preflight
 RUN /preflight/setup.sh
 
 EXPOSE 80 443 22 2222
-CMD ["/bin/bash", "/app/init.sh"]
+VOLUME [ "/files" ]
+VOLUME [ "/repos" ]
+VOLUME [ "/var/log/phorge" ]
+VOLUME [ "/var/lib/tailscale" ]
+CMD ["/app/init.sh"]
