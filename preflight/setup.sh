@@ -19,7 +19,8 @@ mv /preflight/10-boot-conf /app/startup/10-boot-conf
 mv /preflight/php-fpm.conf /etc/php83/php-fpm.conf.template
 
 mv /preflight/supervisord.conf /app/supervisord.conf
-ln -s /app/supervisord.conf /etc/supervisor/supervisord.conf
+rm /etc/supervisord.conf
+ln -s /app/supervisord.conf /etc/supervisord.conf
 mv /preflight/init.sh /app/init.sh
 
 mv /preflight/preamble.php /srv/phorge/phorge/support/preamble.php
@@ -45,4 +46,4 @@ chown root:root /etc/phorge-ssh/*
 
 # Setup logs directory for Phorge services and friends
 mkdir /var/log/phorge
-chown PHORGE:wwgrp-phorge -Rv /var/log/phorge
+chown PHORGE:wwwgrp-phorge -Rv /var/log/phorge
