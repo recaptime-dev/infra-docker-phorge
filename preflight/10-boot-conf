@@ -223,6 +223,9 @@ else
   APHLICT_PROTOCOL="https"
   APHLICT_PORT=443
 fi
+if [[ "$PHORGE_EXPERIMENTAL_FEATURES" != "" ]]; then
+  sudo -u "$PHORGE_VCS_USER" ./bin/config set phabricator.show-prototypes true
+fi
 sudo -u "$PHORGE_VCS_USER" ./bin/config set notification.servers '[{"type": "client","host": "'$PHORGE_HOST'","port": '$APHLICT_PORT',"protocol": "'$APHLICT_PROTOCOL'","path": "/ws/"},{"type": "admin","host": "127.0.0.1","port": 22281,"protocol": "http"}]'
 unset APHLICT_PROTOCOL
 unset APHLICT_PORT
