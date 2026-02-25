@@ -271,6 +271,7 @@ set -x
 # needed to fix permission errors on first run
 chown -R "${PHORGE_VCS_USER}:wwwgrp-phorge" "${PHORGE_REPOSITORY_PATH}"
 chown -R "${PHORGE_VCS_USER}:wwwgrp-phorge" "${PHORGE_STORAGE_PATH}"
+chown -Rv "${PHORGE_VCS_USER}:wwwgrp-phorge" "/var/log/phorge"
 
 if [ "$SCRIPT_AFTER_MIGRATION" != "" ]; then
   pushd /srv/phorge/phorge

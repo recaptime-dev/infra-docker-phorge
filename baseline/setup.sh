@@ -62,7 +62,7 @@ php -m
 # Config adjustments
 # In Alpine, main ini is /etc/php83/php.ini
 sed -i "s/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g" /etc/php83/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 32M/g" /etc/php83/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 64M/g" /etc/php83/php.ini
 
 # Node
 apk add --no-cache nodejs npm

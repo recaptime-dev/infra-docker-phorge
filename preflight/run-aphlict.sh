@@ -12,15 +12,11 @@ export NVM_DIR="$HOME/.nvm"
 
 if [ ! -f /baked ]; then
   # Touch log file and PID file to make sure they're writable
-  touch /var/log/aphlict.log
-  chown "$PHORGE_VCS_USER:wwwgrp-phorge" /var/log/aphlict.log
-
-  # Copy ws module from global install
-  cp -Rv /usr/lib/node_modules /srv/phorge/phorge/support/aphlict/server/
-  chown -Rv "$PHORGE_VCS_USER:wwwgrp-phorge" /srv/phorge/phorge/support/aphlict/server/node_modules
+  touch /var/log/phorge/aphlict.log
+  chown "${PHORGE_VCS_USER}:wwwgrp-phorge" /var/log/phorge/aphlict.log
 
   # Configure the Phorge notification server
-  cat >/srv/aphlict.conf <<EOF
+  cat >/srv/phorge/aphlict.conf <<EOF
 {
   "servers": [
     {
@@ -42,7 +38,7 @@ if [ ! -f /baked ]; then
   ],
   "logs": [
     {
-      "path": "/dev/stdout"
+      "path": "/var/log/phorge/aphlict.log"
     }
   ],
   "pidfile": "/run/watch/aphlict"
@@ -51,12 +47,13 @@ EOF
 
   # Aphlict needs write access to this directory
   chmod a+rwX /run/watch
+  chown -v "${PHORGE_VCS_USER}:wwwgrp-phorge" /srv/phorge/aphlict.conf
 fi
 
 if [ ! -f /is-baking ]; then
   # Start the Phorge notification server
   pushd /srv/phorge/phorge
-  sudo -u "$PHORGE_VCS_USER" bin/aphlict start --config=/srv/aphlict.conf
+  sudo -u "$PHORGE_VCS_USER" bin/aphlict start --config=/srv/phorge/aphlict.conf
   popd
 
   set +e

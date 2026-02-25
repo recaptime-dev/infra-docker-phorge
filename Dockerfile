@@ -10,6 +10,10 @@ RUN apk update && apk upgrade \
     curl \
     gcc \
     git \
+    git-lfs \
+    git-daemon \
+    git-subtree \
+    git-email \
     gnupg \
     make \
     musl-dev \
@@ -52,8 +56,7 @@ RUN apk update && apk upgrade \
     supervisor \
     nodejs \
     npm \
-  && ln -sf /usr/bin/php83 /usr/bin/php \
-  && npm install -g ws
+  && ln -sf /usr/bin/php83 /usr/bin/php
 
 RUN sed -i "s/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g" /etc/php83/php.ini \
   && sed -i "s/post_max_size = 8M/post_max_size = 32M/g" /etc/php83/php.ini
@@ -68,14 +71,12 @@ RUN addgroup -g 2000 wwwgrp-phorge \
 WORKDIR /srv/phorge
 RUN git clone https://we.phorge.it/source/arcanist.git ./arcanist \
   && git clone https://we.phorge.it/source/phorge.git ./phorge \
-  && mkdir /srv/phorge/phorge/support/aphlict/server/node_modules \
-  && npm install -prefix /srv/phorge/phorge/support/aphlict/server/node_modules ws \
+  && npm install -prefix /srv/phorge/phorge/support/aphlict/server ws \
   && git config --system --add safe.directory /srv/phorge/arcanist \
   && git config --system --add safe.directory /srv/phorge/phorge \
   && chown -R PHORGE:wwwgrp-phorge /srv/phorge \
   && mkdir -p /repos && chown -R PHORGE:wwwgrp-phorge /repos
 
-WORKDIR /
 COPY preflight /preflight
 RUN /preflight/setup.sh
 
