@@ -238,6 +238,7 @@ fi
 if [[ "$PHORGE_EXPERIMENTAL_FEATURES" != "" ]]; then
   sudo -u "$PHORGE_VCS_USER" ./bin/config set phabricator.show-prototypes true
 fi
+sudo -u "$PHORGE_VCS_USER" ./bin/config set environment.append-paths '["/bin","/usr/bin","/usr/local/bin","/usr/libexec/git-core"]'
 sudo -u "$PHORGE_VCS_USER" ./bin/config set notification.servers '[{"type": "client","host": "'$PHORGE_HOST'","port": '$APHLICT_PORT',"protocol": "'$APHLICT_PROTOCOL'","path": "/ws/"},{"type": "admin","host": "127.0.0.1","port": 22281,"protocol": "http"}]'
 unset APHLICT_PROTOCOL
 unset APHLICT_PORT
@@ -248,8 +249,6 @@ if [ "$ENABLE_APCU" == "true" ]; then
 extension=apcu.so
 EOF
 fi
-
-chown "${PHORGE_VCS_USER:-"git"}" /srv/phorge/phorge/support/preamble.php
 
 # HACK: A bit of workaround for those proxies that don't pass Host aroundm think Firebase Studio
 # Source: https://github.com/cooperspencer/phorge/blob/5890c6ff66c36872d890fe07f552d50208e36701/scripts/startup.sh#L78
