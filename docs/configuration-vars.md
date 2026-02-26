@@ -39,3 +39,8 @@ The following advanced options allow you to run custom scripts during stages of 
 - `SCRIPT_BEFORE_DAEMONS` - Occurs before background daemons are launched.
 - `SCRIPT_AFTER_DAEMONS` - Occurs after background daemons are launched.  You can use this to launch additional daemons.
 
+The following options are for setting up access over your Tailscale network:
+
+- `TAILSCALE_AUTHKEY` - Your Tailscale auth key
+- `TAILSCALE_HOSTNAME` - Custom hostname for Tailscale to use during `tailscale login`
+- `TAILSCALE_AUTH_ONCE` - Only authenticate once when set to `true`. DO NOT SET TO `true` WITHOUT PERSISTING `/var/lib/tailscale` directory.
