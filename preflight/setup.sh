@@ -32,6 +32,7 @@ mv /preflight/phorge-ssh-hook.sh /etc/phorge-ssh/phorge-ssh-hook.sh.template
 mv /preflight/bake /bake
 mkdir /opt/iomonitor
 mv /preflight/iomonitor /opt/iomonitor
+mv /preflight/setup-tailscale.sh /app/setup-tailscale.sh
 rm /preflight/setup.sh
 cd /
 ls /preflight
