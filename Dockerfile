@@ -85,6 +85,7 @@ RUN git clone https://we.phorge.it/source/arcanist.git ./arcanist \
 COPY preflight /preflight
 RUN /preflight/setup.sh
 
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/libexec/git-core
 EXPOSE 80 443 22 2222
 VOLUME [ "/files" ]
 VOLUME [ "/repos" ]
