@@ -11,9 +11,17 @@ updates:
       interval: "weekly"
     assignees:
       - ajhalili2006
+    groups:
+      github-actions-deps:
+        patterns:
+          - "*"
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: weekly
     assignees:
       - ajhalili2006
+    groups:
+      docker-base-images:
+        patterns:
+          - "*"
