@@ -1,6 +1,7 @@
 FROM alpine:3.23
 
 # Install dependencies
+# hadolint ignore=DL3018
 RUN apk update && apk upgrade \
   && apk add --no-cache \
     autoconf \
@@ -76,6 +77,7 @@ RUN addgroup -g 2000 wwwgrp-phorge \
 
 # Setting up Phorge from source
 WORKDIR /srv/phorge
+# hadolint ignore=DL3016
 RUN git clone https://github.com/phorgeit/arcanist.git ./arcanist \
   && git clone https://github.com/phorgeit/phorge.git ./phorge \
   && npm install -prefix /srv/phorge/phorge/support/aphlict/server ws \
