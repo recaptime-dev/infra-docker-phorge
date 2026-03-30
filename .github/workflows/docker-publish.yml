@@ -68,12 +68,13 @@ jobs:
             org.opencontainers.image.description=Alpine Linux Docker image port of Christopher Wetherill's Docker build setup for Phorge.
             org.opencontainers.image.authors=Originally made by https://github.com/wetherc, Alpine Linux image port maintained by https://andreijiroh.dev as part of https://recaptime.dev
             org.opencontainers.image.vendor=Recap Time Squad
+            org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
           tags: |
             type=schedule
             type=schedule,prefix=nightly-,pattern={{date 'YYYYMMDD' tz='Etc/UTC'}}
             type=ref,event=branch,prefix=branch-
             type=sha,format=long,prefix=commit-
-            type=raw,prefix=build-,pattern={{date 'YYYYMMDD' tz='Etc/UTC'}}
+            type=raw,value=build-{{date 'YYYYMMDDHHmm' tz='Etc/UTC'}}
             type=raw,value=latest,enable={{is_default_branch}}
 
       # Build and push Docker image with Buildx (don't push on PR)
