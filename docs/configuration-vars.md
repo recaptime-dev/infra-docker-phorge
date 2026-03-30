@@ -1,5 +1,7 @@
 # Full Environment Variable Reference
 
+## Basics
+
 - `PHORGE_HOST` - The domain name for the Phorge host (e.g. "mydomain.com").
 - `PHORGE_CDN` - The domain name to use for serving files and other user content (optional, but recommended).
 - `PHORGE_REPOSITORY_PATH` - The path to store repository data in.  This directory should be a volume mapped from the host, otherwise repository data will be lost when the container is destroyed.
@@ -23,12 +25,16 @@
 - `SSL_TYPE` - One of "none", "manual", "external" or "letsencrypt".  See [Basic Configuration](BASIC-CONFIG.md) for more information (defaults to "none").
 - `DISABLE_IOMONITOR` - Disable the I/O monitor, which warns if the image is spending a lot of CPU time waiting on disk I/O.
 
+## Updating Phorge and Arcanist on start
+
 The following advanced options automatically turn on `ENABLE_UPDATE_ON_START`:
 
 - `OVERRIDE_PHORGE_URI` - Changes the Git URI to clone Phorge from.
 - `OVERRIDE_PHORGE_BRANCH` - Changes the Git branch or commit to use for the Phorge repository.
 - `OVERRIDE_ARCANIST_URI` - Changes the Git URI to clone Arcanist from.
 - `OVERRIDE_ARCANIST_BRANCH` - Changes the Git branch or commit to use for the Arcanist repository.
+
+## Custom scripts
 
 The following advanced options allow you to run custom scripts during stages of the boot process:
 
@@ -38,6 +44,8 @@ The following advanced options allow you to run custom scripts during stages of 
 - `SCRIPT_AFTER_LETS_ENCRYPT` - Occurs after Let's Encrypt has registered domains.  You can use this script to register additional domains that aren't specified by `PHORGE_HOST` or `PHORGE_CDN`.  This only runs if SSL is set to the Let's Encrypt mode.
 - `SCRIPT_BEFORE_DAEMONS` - Occurs before background daemons are launched.
 - `SCRIPT_AFTER_DAEMONS` - Occurs after background daemons are launched.  You can use this to launch additional daemons.
+
+## Tailscale
 
 The following options are for setting up access over your Tailscale network:
 

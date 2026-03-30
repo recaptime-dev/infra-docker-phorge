@@ -2,7 +2,7 @@
 
 For most basic setups, you can use environment variables to configure the Phorge image to your liking.  This works well with tools like `docker-compose`.
 
-A full list of all available environment variables can be found in the [Full Environment Variable List](ENV-LIST.md).
+A full list of all available environment variables can be found in the [Full Environment Variable List](./configuration-vars.md).
 
 # Configuring MySQL
 
@@ -59,7 +59,7 @@ docker run ... \
     ...
 ```
 
-To provide SSH access to repositories, you need to set a path to store the SSH host keys in.  If you are not baking a derived image (see [Advanced Configuration](ADVANCED-CONFIG.md)), then you need to map that path to a location on the host.  If you are baking an image, you can omit the mapping and the SSH keys will form part of your derived image.  You can configure SSH access to repositories like so:
+To provide SSH access to repositories, you need to set a path to store the SSH host keys in.  If you are not baking a derived image (see [Advanced Configuration](advanced-setup.md)), then you need to map that path to a location on the host.  If you are baking an image, you can omit the mapping and the SSH keys will form part of your derived image.  You can configure SSH access to repositories like so:
 
 ```
 docker run ... \

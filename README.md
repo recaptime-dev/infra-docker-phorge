@@ -1,5 +1,7 @@
 # `@recaptime-dev/infra-docker-phorge` - Docker image for Phorge in Alpine Linux
 
+[![Docker CI](https://github.com/recaptime-dev/infra-docker-phorge/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/recaptime-dev/infra-docker-phorge/actions/workflows/docker-publish.yml)
+
 ## Usage
 
 * As a standalone Docker image:
@@ -24,53 +26,16 @@
   docker compose up
   ```
 
-## License
+## Documentation and Support
 
-MIT
+Docs for the Docker image can be found at the [`docs` directory](./docs).
 
----
+For help in using the Docker image, you can get assistance from the RecapTime.dev crew and community through the following places:
 
-# Phorge
+* in the GitHub Discussions organization-wide, through [its dedicated project category](https://github.com/orgs/recaptime-dev/discussions/categories/phorge-docker-image)
+* join our Zulip Cloud organization and [ask in the `projects/phorge-docker-image` channel](https://recaptime-dev.zulipchat.com/#narrow/channel/586152-projects.2Fphorge-docker-image)
 
-This is a Docker image which provides a fully configured Phorge image, including SSH connectivity to repositories, real-time notifications via Web Sockets and all of the other parts that are normally difficult to configure done for you.
-
-You'll need an instance of MySQL for this Docker image to connect to, and for basic setups you can specify it with either the `MYSQL_LINKED_CONTAINER` or `MYSQL_HOST` environment variables, depending on where your instance of MySQL is.
-
-The most basic command to run Phorge is:
-
-```
-docker run \
-    --rm -p 80:80 -p 443:443 -p 22:22 \
-    --env PHORGE_HOST=mydomain.com \
-    --env MYSQL_HOST=10.0.0.1 \
-    --env MYSQL_USER=user \
-    --env MYSQL_PASS=pass \
-    --env PHORGE_REPOSITORY_PATH=/repos \
-    -v /host/repo/path:/repos \
-    phorge
-```
-
-Alternatively you can launch this image with Docker Compose. Refer to [Using Docker Compose](./docs/docker-compose.md) for more information.
-
-## Configuration
-
-For basic configuration in getting the image running, refer to [Basic Configuration](./docs/basic-setup.md).
-
-For more advanced configuration topics including:
-
-* Using different source repositories (for patched versions of Phorge)
-* Running custom commands during the boot process, and
-* Baking configuration into your own derived Docker image
-
-refer to [Advanced Configuration](./docs/advanced-setup.md).
-
-For users that are upgrading to this version and currently using the old `/config` mechanism to configure Phorge, this configuration mechanism will continue to work, but it's recommended that you migrate to environment variables or baked images when you next get the chance.
-
-## Support
-
-For issues regarding environment setup, missing tools or parts of the image not starting correctly, file a GitHub issue.
-
-For issues encountered while using Phorge itself, report the issue with reproduction steps on the [upstream bug tracker](https://we.phorge.it/book/contrib/article/bug_reports/).
+If you need help with using Phorge itself, [see the upstream docs](https://we.phorge.it/book/contrib/article/bug_reports/) for details.
 
 ## License
 

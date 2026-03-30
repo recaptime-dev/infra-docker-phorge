@@ -66,7 +66,7 @@ export MYSQL_HOST="..."
 /bake /my-script
 ```
 
-You can set the advanced environment variables for hooking scripts as documented in [Full Environment Variable Reference](ENV-LIST.md), and add those
+You can set the advanced environment variables for hooking scripts as documented in [Full Environment Variable Reference](configuration-vars.md), and add those
 scripts to your image so they run each time.
 
 When writing custom scripts for your image, you can check if the script is being run during the initial bake process by checking with:
