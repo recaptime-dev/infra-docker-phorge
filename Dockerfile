@@ -74,8 +74,8 @@ RUN addgroup -g 2000 wwwgrp-phorge \
 
 # Setting up Phorge from source
 WORKDIR /srv/phorge
-RUN git clone https://we.phorge.it/source/arcanist.git ./arcanist \
-  && git clone https://we.phorge.it/source/phorge.git ./phorge \
+RUN git clone https://github.com/phorgeit/arcanist.git ./arcanist \
+  && git clone https://github.com/phorgeit/phorge.git ./phorge \
   && npm install -prefix /srv/phorge/phorge/support/aphlict/server ws \
   && git config --system --add safe.directory /srv/phorge/arcanist \
   && git config --system --add safe.directory /srv/phorge/phorge \
