@@ -2,7 +2,6 @@ FROM alpine:3.23
 
 # Install dependencies
 RUN apk update && apk upgrade \
-  && apk update && apk upgrade \
   && apk add --no-cache \
     autoconf \
     bash \
@@ -62,6 +61,9 @@ RUN apk update && apk upgrade \
 COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /usr/local/bin/tailscaled
 COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscale /usr/local/bin/tailscale
 RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
+# Cloudflared
+COPY --from=docker.io/cloudflare/cloudflared:latest /usr/local/bin/cloudflared /usr/local/bin/cloudflared
 
 RUN sed -i "s/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g" /etc/php83/php.ini \
   && sed -i "s/post_max_size = 8M/post_max_size = 64M/g" /etc/php83/php.ini
