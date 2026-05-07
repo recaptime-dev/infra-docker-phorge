@@ -47,13 +47,21 @@ jobs:
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
-      - name: Log into registry GHCR
+      - name: Log into registry - GHCR
         if: github.event_name != 'pull_request'
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # Comment out once ready to set up
+      #- name: Login into registry - ATCR
+      #  if: github.event_name != 'pull_request'
+      #  uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+      #  with:
+      #    registry: atcr.io
+      #    username: recaptime.dev
+      #    password: ${{ secrets.ATPROTO_APP_PASSWORD_ATCR }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -87,8 +95,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=builder/deploy
-          cache-to: type=gha,mode=max,scope=builder/deploy
+          #cache-from: type=gha,scope=builder/deploy
+          #cache-to: type=gha,mode=max,scope=builder/deploy
           platforms: linux/amd64,linux/arm64
 
       # Sign the resulting Docker image digest except on PRs.
