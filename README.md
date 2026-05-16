@@ -17,7 +17,7 @@
     --env MYSQL_PASS=pass \
     --env PHORGE_REPOSITORY_PATH=/repos \
     -v /host/repo/path:/repos \
-    ghcr.io/recaptime-dev/phorge-alpine
+    ghcr.io/recaptime-dev/infra/docker/phorge
   ```
 
 * Via Docker Compose:
@@ -25,6 +25,12 @@
   ```shell
   docker compose up
   ```
+
+### Container registries
+
+We're currently publishing our own images via [GitHub Container Registry](https://github.com/recaptime-dev/infra-docker-phorge/pkgs/container/infra%2Fdocker%2Fphorge),
+but we'll plan to publish them via GitLab Container Registry at GitLab.com and AT Container Registry in the Atmosphere
+in the future.
 
 ## Documentation and Support
 
@@ -39,4 +45,6 @@ If you need help with using Phorge itself, [see the upstream docs](https://we.ph
 
 ## License
 
-The configuration scripts provided in this image are licensed under the MIT license.  Phorge itself and all accompanying software are licensed under their respective software licenses.
+The configuration scripts provided in this image are licensed under the MIT license.
+Phorge itself and all accompanying software, including community extensions included in
+the image for convenience are licensed under their respective software licenses.
